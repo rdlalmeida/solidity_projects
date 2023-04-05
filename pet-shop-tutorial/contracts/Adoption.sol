@@ -8,7 +8,7 @@ contract Adoption {
     uint public max_index = 15;
 
     function adopt(uint petId) public returns (uint) {
-        require (petId >= min_index && petId <= max_index, "Please provide a petId between " + min_index + " and " + max_index);
+        require (petId >= min_index && petId <= max_index, "Please provide a valid prtId between 0 and 15");
 
         adopters[petId] = msg.sender;
 
