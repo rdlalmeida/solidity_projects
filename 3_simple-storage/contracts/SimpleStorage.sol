@@ -4,7 +4,7 @@ contract SimpleStorage {
   uint myVariable;
 
   function set(uint x) public {
-    assert(x == 0);
+    require(x == 0, "X need to be zero!");
     myVariable = x;
   }
 
