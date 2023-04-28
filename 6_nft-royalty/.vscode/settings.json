@@ -1,0 +1,5 @@
+{
+    "solidity.remappings": [
+      "@openzeppelin/=C:\\Users\\ricardoalmeida\\AppData\\Roaming\\npm\\node_modules\\@openzeppelin"
+    ]
+  }
