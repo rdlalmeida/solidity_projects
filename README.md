@@ -1,2 +1,3 @@
 # mastering_ethereum
-Repository for the examples in the Mastering Ethereum book
+
+Repository for various Solidity based project, mostly for training purposes
