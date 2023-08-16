@@ -16,6 +16,12 @@ const readContractABI = (contractABIPath) => {
 };
 
 const main = async function () {
+    if (!process.argv[2]) {
+        throw new Error(
+            "Unable to continue until a new number is passed as argument!"
+        );
+    }
+
     const web3 = new Web3(
         new Web3.providers.HttpProvider(process.env.PROVIDER_URL)
     );
@@ -33,7 +39,7 @@ const main = async function () {
 
     const accounts = await web3.eth.getAccounts();
     const main_account = accounts[0];
-    const newNumber = 18;
+    const newNumber = Number(process.argv[2]);
 
     const current_favorite_number = await simple_storage_contract.methods
         .retrieve()
