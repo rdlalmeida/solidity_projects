@@ -5,6 +5,16 @@ pragma solidity ^0.8.24;
 // Imports
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import {PriceConverter} from "./PriceConverter.sol";
+/**
+    NOTE: Plain Solidity does not have any way to communicate to the 'outside', like other languages have
+    print, printf or console.log. The guys at Hardhat solve this by adding the hardhat/console.sol contract
+    that can enable this functionality in Solidity.
+    This import serves solely for that: enable console logging at the smart contract level
+    NOTE: If VS complains about the console thing, ignore the motherfucker... this actually works... The console
+    is sent to the blockchain terminal (a terminal window if running a local network, otherwise you need to
+    see how to check these things on other deployment networks)
+*/
+import {console} from "hardhat/console.sol";
 
 // Error Codes
 
@@ -85,14 +95,18 @@ contract FundMe {
             it, you need divination skills to work with this shit...
             So, is this it? Is this the whole spectrum of messiness you're talking about??
             Fuck no! This is just an apetizer!
-            
+            import {console} from "hardhat/console.sol";
             Next comes the weirdest thing I ever saw as a software engineer:
             So, 'getConversionRate' takes two arguments: a uint256 amount and an AggregatorV3Interface object named priceFeed. So far so good
             But, by some stupid reason, the first argument is 'passed' by... (I need to breathe deeply first) calling the function from
             the argument.. HOW IS THIS LOGIC????? WHO THE FUCK CAME UP WITH THIS STUPIDITY???? THIS GOES AGAINST EVERY SINGLE NOTION
             OF GOOD SOFTWARE WRITTING!
             So, not only you have to find out where the fuck the 'getConversionRate' comes from, but you also have to take into account
-            that, UNLINKE EVERY DECENT AND LOGIC PROGRAMMING LANGUAGE OUT THERE (including fucking PhP!!!!!), you can invoke a function
+                      const attackerConnectedContract = await fundMeContract.connect(
+                attacker
+            )
+
+            await expect(attackerConnectedContract.withdraw()).to.be.reverted  that, UNLINKE EVERY DECENT AND LOGIC PROGRAMMING LANGUAGE OUT THERE (including fucking PhP!!!!!), you can invoke a function
             from a non-object, like an uint256, and when you do, the first argument (but not the second or any other after) is actually
             actually that value??? This is madness I tell you...
             OK, confusing enough... But what if the function has more than one input?
@@ -128,6 +142,14 @@ contract FundMe {
 
         addressToAmountFunded[msg.sender] += msg.value;
         founders.push(msg.sender);
+
+        uint256 ethVal = msg.value / (1 * 10 ** 18);
+
+        console.log("Account ");
+        console.log(msg.sender);
+        console.log(" funded this contract with ");
+        console.log(ethVal);
+        console.log(" ETH");
     }
 
     /**
@@ -136,6 +158,7 @@ contract FundMe {
     */
     function getVersion() public view returns (uint256) {
         // ETH/USD price feed address of Sepolia Network
+        console.log("getVersion function invoked!");
         return priceFeed.version();
     }
 

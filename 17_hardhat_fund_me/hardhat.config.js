@@ -60,5 +60,11 @@ module.exports = {
         deployer: {
             default: 0, // This means: use accounts[0] as the account to deploy stuff, i.e., the deployer account
         },
+        account1: {
+            default: 1,
+        },
+        account2: {
+            default: 2,
+        },
     },
 }

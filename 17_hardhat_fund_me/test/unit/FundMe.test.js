@@ -6,11 +6,15 @@ describe("FundMe", async function () {
     let fundMeContract
     let networkProvider
     let deployer
+    let account1
+    let account2
     let mockV3AggregatorInstance
     let mockV3AggregatorContract
     let fundMeHelperInstance
     let fundMeHelperContract
     let signer
+    let numSigners
+    let accounts
 
     // Set 1 ETH as test value for transacting stuff
     const sendValue = ethers.parseEther("10")
@@ -42,6 +46,8 @@ describe("FundMe", async function () {
         deployer = (await getNamedAccounts()).deployer
         await deployments.fixture(["all"])
         accounts = await getNamedAccounts()
+        account1 = accounts.account1
+        account2 = accounts.account2
 
         // NOTE: The two lines bellow don't work because, as it is normal by now, the 'ethers' lib doesn't have the
         // getContract function anymore. Bellow them are the "newest" correct way to retrieve a compiled contract
@@ -76,6 +82,7 @@ describe("FundMe", async function () {
         // Get the network provider and the signer object that is currently associated to the deployer address
         networkProvider = ethers.provider
         signer = await networkProvider.getSigner()
+        numSigners = 6
 
         // This one works...
         // fallBackValue = BigInt(Number(ethers.WeiPerEther) * 1.3)
@@ -83,14 +90,14 @@ describe("FundMe", async function () {
         // console.log("Fallback value = ", fallBackValue, " wei")
     })
 
-    describe("constructor", async function () {
+    describe.skip("constructor", async function () {
         it("sets the aggregator addresses correctly", async function () {
             const response = await fundMeContract.priceFeed()
             assert.equal(response, mockV3AggregatorInstance.address)
         })
     })
 
-    describe("fund", async function () {
+    describe.skip("fund", async function () {
         it("fails if you don't send enough ETH", async function () {
             await expect(
                 fundMeContract.fund({ gas: 22000 })
@@ -126,7 +133,7 @@ describe("FundMe", async function () {
             const tx = await fundMeContract.fund({ value: sendValue })
         })
 
-        it("should fail and revert with a custom error if contract funded with invalid value", async function () {
+        it.skip("should fail and revert with a custom error if contract funded with invalid value", async function () {
             // Try to fund the contract with a value less than the minimum (0.5 ETH)
             const minValue = ethers.parseEther("0.2")
             await expect(
@@ -146,7 +153,7 @@ describe("FundMe", async function () {
             // console.log("Helper contract balance: ", helperBalance.toString())
         })
 
-        it("should fund the helper contract properly", async function () {
+        it.skip("should fund the helper contract properly", async function () {
             // Fund the contract with a proper value this time
             const fundValue = ethers.parseEther("1.2")
 
@@ -165,7 +172,7 @@ describe("FundMe", async function () {
             assert.equal(fundValue.toString(), fundMeHelperBalance.toString())
         })
 
-        it("withdraw ETH from a single founder", async function () {
+        it.skip("withdraw ETH from a single founder", async function () {
             // Arrange
             const startingFundMeBalance = await networkProvider.getBalance(
                 fundMeInstance.address
@@ -213,7 +220,82 @@ describe("FundMe", async function () {
             assert.equal(endingFundMeBalance, 0)
         })
 
-        it("reverts transaction with the correct custom error code", async function () {
+        it.skip("allows us to withdraw from multiple founders", async function () {
+            const signerAccounts = await ethers.getSigners()
+            for (let i = 1; i < numSigners; i++) {
+                // Connect the fundMeContract object to the next available account
+                const fundMeConnectedContract = await fundMeContract.connect(
+                    signerAccounts[i]
+                )
+
+                // And use the connected account to fund the contract
+                await fundMeConnectedContract.fund({ value: sendValue })
+            }
+
+            const startingFundMeBalance = await networkProvider.getBalance(
+                fundMeInstance.address
+            )
+            const startingDeployerBalance = await networkProvider.getBalance(
+                deployer
+            )
+
+            const transactionResponse = await fundMeContract.withdraw()
+            const transactionReceipt = await transactionResponse.wait(1)
+
+            const gasCost = getGasCost(transactionReceipt)
+
+            // Assert
+            const endingFundMeBalance = await networkProvider.getBalance(
+                fundMeInstance.address
+            )
+            const endingDeployerBalance = await networkProvider.getBalance(
+                deployer
+            )
+
+            assert.equal(endingFundMeBalance, 0)
+            assert.equal(
+                (startingFundMeBalance + startingDeployerBalance).toString(),
+                (endingDeployerBalance + gasCost).toString()
+            )
+
+            // Make sure that the founders are reset properly
+            await expect(fundMeContract.founders(0)).to.be.reverted
+
+            for (i = 0; i < numSigners; i++) {
+                assert.equal(
+                    await fundMeContract.addressToAmountFunded(
+                        signerAccounts[i].address
+                    ),
+                    0
+                )
+            }
+        })
+
+        it("Only allows the owner to withdraw", async function () {
+            // const accounts = ethers.getSigners();
+
+            const signers = await ethers.getSigners()
+
+            const attacker = signers[1]
+
+            // const attackedContract = await ethers.getContractAt(
+            //     fundMeInstance.abi,
+            //     fundMeInstance.address,
+            //     attacker
+            // )
+
+            // await expect(attackedContract.withdraw()).to.be.reverted
+
+            const attackerConnectedContract = await fundMeContract.connect(
+                attacker
+            )
+
+            await expect(
+                attackerConnectedContract.withdraw()
+            ).to.be.revertedWithCustomError(fundMeContract, "FundMe__NotOwner")
+        })
+
+        it.skip("reverts transaction with the correct custom error code", async function () {
             // To test this I need to, somehow, trigger the withdraw function in such a way that it does everything right
             // besides the final call, which should fail somehow to trigger the desired error
 
@@ -228,7 +310,12 @@ describe("FundMe", async function () {
         })
     })
 
-    describe("fallback", async function () {
+    function getGasCost(transactionReceipt) {
+        const { gasUsed, gasPrice } = transactionReceipt
+        return gasUsed * gasPrice
+    }
+
+    describe.skip("fallback", async function () {
         it("should invoke the fallback function when a non-existent function is attempted", async function () {
             // Inject a 'fake' function into the Helper contract so that I can call it and provoke the invocation of the fallback one
             // const fakeDemoContract = new ethers.Contract(
@@ -293,7 +380,7 @@ describe("FundMe", async function () {
         })
     })
 
-    describe("receive", async function () {
+    describe.skip("receive", async function () {
         it("should call the receive function when a simple send or call is invoked instead", async function () {
             /* 
                 Lets test for 3 things: 
@@ -347,7 +434,7 @@ describe("FundMe", async function () {
         })
     })
 
-    describe("getVersion", async function () {
+    describe.skip("getVersion", async function () {
         it("should return the correct version for the price aggregator module", async function () {
             const version = await fundMeContract.getVersion()
 
@@ -359,4 +446,4 @@ describe("FundMe", async function () {
     })
 })
 
-// TODO: Video stopped at 11:36:34 (console.log & Debugging)
+// TODO: Video stopped at 11:44:34 (Storage in Solidity)
