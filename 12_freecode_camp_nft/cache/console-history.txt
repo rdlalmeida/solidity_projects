@@ -1,0 +1,32 @@
+.exit
+new_network
+const new_network = await ethers.getDefaultProvider().getNetwork();
+const { ethers } = require('hardhat');
+network
+.exit
+network
+new_network
+const new_network = await hre.ethers.provider.getNetwork();
+hre
+import hre from 'hardhat'
+network
+.exit
+.help
+ethers
+network
+const network = await ethers.getDefaultProvider().getNetwork();
+const { ethers } = require("hardhat")
+exit()
+exit
+network
+const network = await ethers.getDefaultProvider().getNetwork();
+console.log("Network name = ", network.ensAddress);
+network
+console.log("Network name = ", network.chainId);
+console.log("Network name = ", network.name);
+network
+const network = await ethers.getDefaultProvider().getNetwork();
+ethers
+const  { ethers } = require('hardhat');
+.editor
+.help

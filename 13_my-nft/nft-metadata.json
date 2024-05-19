@@ -1,0 +1,15 @@
+{
+    "attributes": [
+        {
+            "trait_type": "species",
+            "value": "baboon"
+        },
+        {
+            "trait_type": "color",
+            "value": "light-brown"
+        }
+    ],
+    "description": "The mightiest monkey in the African Savannah went full decentralized!",
+    "image": "ipfs://QmPwbqyfvEVWrrVqGktrH17zUGPMCn3jVXgxmN8cD7CU6E",
+    "name": "Ricardo's pet!"
+}

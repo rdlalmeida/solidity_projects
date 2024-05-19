@@ -1,0 +1,53 @@
+{
+	"compiler": {
+		"version": "0.8.0+commit.c7dfd78e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"3_remix_fund_me/contracts/PriceConverter.sol": "PriceConverter"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"3_remix_fund_me/contracts/PriceConverter.sol": {
+			"keccak256": "0x079101bba74cd18f8d28c1310ed5364cc59b45983dcdb9e9373410b8276fb980",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f72c608b232871f5663cb5f229a8538357c99f6621f375a1fcf5814736792d0e",
+				"dweb:/ipfs/QmV4Wat69KBtEeMFyM9ZmKTyx8CftpRNmDu99QreCnG7Db"
+			]
+		},
+		"@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol": {
+			"keccak256": "0x6e6e4b0835904509406b070ee173b5bc8f677c19421b76be38aea3b1b3d30846",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b3beaa37ee61e4ab615e250fbf01601ae481de843fd0ef55e6b44fd9d5fff8a7",
+				"dweb:/ipfs/QmeZUVwd26LzK4Mfp8Zba5JbQNkZFfTzFu1A6FVMMZDg9c"
+			]
+		}
+	},
+	"version": 1
+}

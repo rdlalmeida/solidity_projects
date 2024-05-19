@@ -13,5 +13,8 @@
     },
     "scripts": {
         "compile": "solcjs --bin --abi --include-path ./node_modules/ --base-path ./4_ethers-simple-storage-fcc/contracts/ -o ./4_ethers-simple-storage-fcc/build/ ./4_ethers-simple-storage-fcc/contracts/SimpleStorage.sol"
+    },
+    "devDependencies": {
+        "solidity-coverage": "^0.8.4"
     }
 }
