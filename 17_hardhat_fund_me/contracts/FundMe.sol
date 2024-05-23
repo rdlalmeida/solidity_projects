@@ -14,7 +14,7 @@ import {PriceConverter} from "./PriceConverter.sol";
     is sent to the blockchain terminal (a terminal window if running a local network, otherwise you need to
     see how to check these things on other deployment networks)
 */
-import {console} from "hardhat/console.sol";
+
 
 // Error Codes
 
@@ -51,20 +51,23 @@ contract FundMe {
     using PriceConverter for uint256;
 
     // State Variables
-    mapping(address => uint256) public addressToAmountFunded;
-    address[] public founders;
-    // Could we make this constant? No! We should make it immutable!
-    address public immutable OWNER;
+    // NOTE: The 's_' prefix means that the variable in question is going to be stored into blockchain storage, which happens
+    // to be a very expensive operation, hence why it is important to note that.
+    mapping(address => uint256) private s_addressToAmountFunded;
+    address[] private s_founders;
+    // Could we make this constant? No! We should make it immutable! As before, the 'i_' indicates an immutable variable.
+    address private immutable i_OWNER;
     // Minimum ETH to send, as USD
-    uint256 public constant MINIMUM_USD = 5 * 10 ** 18; // 50 * 10 ** 18 = 50e18 = 50000000000000000000;
-    AggregatorV3Interface public priceFeed;
+    // uint256 public constant MINIMUM_USD = 50 * 10 ** 18; // 50 * 10 ** 18 = 50e18 = 50000000000000000000;
+    uint256 public constant MINIMUM_USD = 50 * 10 ** 15;
+    AggregatorV3Interface private s_priceFeed;
 
     // Events
 
     // Modifiers
     modifier onlyOwner() {
         // NOTE: NotOwner is a custom error defined at the top of this module.
-        if (msg.sender != OWNER) revert FundMe__NotOwner();
+        if (msg.sender != i_OWNER) revert FundMe__NotOwner();
         _;
     }
 
@@ -79,8 +82,8 @@ contract FundMe {
     // view/pure
 
     constructor(address priceFeedAddress) {
-        OWNER = msg.sender;
-        priceFeed = AggregatorV3Interface(priceFeedAddress);
+        i_OWNER = msg.sender;
+        s_priceFeed = AggregatorV3Interface(priceFeedAddress);
     }
 
     /**
@@ -134,22 +137,14 @@ contract FundMe {
 
             Uff.. that's about it. I need these cathartic notes here and there because working with Javascript is often a mystery.
         */
-        uint256 ethProvided = msg.value.getConversionRate(priceFeed);
+        uint256 ethProvided = msg.value.getConversionRate(s_priceFeed);
 
         if (ethProvided <= MINIMUM_USD) {
             revert FundMe__NotEnoughETH(ethProvided, MINIMUM_USD);
         }
 
-        addressToAmountFunded[msg.sender] += msg.value;
-        founders.push(msg.sender);
-
-        uint256 ethVal = msg.value / (1 * 10 ** 18);
-
-        console.log("Account ");
-        console.log(msg.sender);
-        console.log(" funded this contract with ");
-        console.log(ethVal);
-        console.log(" ETH");
+        s_addressToAmountFunded[msg.sender] += msg.value;
+        s_founders.push(msg.sender);
     }
 
     /**
@@ -158,8 +153,8 @@ contract FundMe {
     */
     function getVersion() public view returns (uint256) {
         // ETH/USD price feed address of Sepolia Network
-        console.log("getVersion function invoked!");
-        return priceFeed.version();
+        
+        return s_priceFeed.version();
     }
 
     /**
@@ -169,18 +164,18 @@ contract FundMe {
         // Go through all the founders so far
         for (
             uint256 founderIndex = 0;
-            founderIndex < founders.length;
+            founderIndex < s_founders.length;
             founderIndex++
         ) {
             // And one by one, extract the address of a founder
-            address founder = founders[founderIndex];
+            address founder = s_founders[founderIndex];
 
             // And set all the funds sent so far to 0
-            addressToAmountFunded[founder] = 0;
+            s_addressToAmountFunded[founder] = 0;
         }
 
         // Reset the array of founders
-        founders = new address[](0);
+        s_founders = new address[](0);
 
         /* 
             Apparentely there are several ways to achieve the next objective, namely, to send all the funds from the individual
@@ -204,6 +199,21 @@ contract FundMe {
         }
     }
 
+    function cheaperWithdraw() public payable onlyOwner {
+        // mappings cannot be in memory! Only arrays!
+        address[] memory founders = s_founders;
+        for (uint256 foundersIndex = 0; foundersIndex < founders.length; foundersIndex++) {
+            address founder = founders[foundersIndex];
+            s_addressToAmountFunded[founder] = 0;
+        }
+        s_founders = new address[](0);
+        (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
+
+        if(!success) {
+            revert FundMe__CallFailed();
+        }
+    }
+
     /**
         @notice Standard fallback function to be executed when no other path is available for the smart contract execution.
     */
@@ -217,4 +227,23 @@ contract FundMe {
     receive() external payable {
         fund();
     }
+
+    // View + Pure
+    function getOwner() public view returns (address) {
+        return i_OWNER;
+    }
+
+    function getFounder(uint256 index) public view returns(address) {
+        return s_founders[index];
+    }
+
+    function getAddressToAmountFunded(address founder) public view returns(uint256) {
+        return s_addressToAmountFunded[founder];
+    }
+
+    function getPriceFeed() public view returns(AggregatorV3Interface) {
+        return s_priceFeed;
+    }
 }
+
+// TODO: Video paused @12:09.57 (Storage Review)

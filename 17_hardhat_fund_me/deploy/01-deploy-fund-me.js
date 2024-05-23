@@ -83,4 +83,4 @@ module.exports = async (hre) => {
     log("--------------------------------------------------------------------")
 }
 
-module.exports.tags = ["all", "fundme"]
+module.exports.tags = ["all", "fundme", "main", "testnet"]

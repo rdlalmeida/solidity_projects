@@ -1,0 +1,14 @@
+Video stopped at 12:22:01
+Thats 44521s
+
+To calculate this in a command line (assuming an environment such as python is available), just do:
+$ python -c "print(<ADD_OPERATION_HERE>);"
+
+For this particular example, the number of seconds in the timestamp is calculated by:
+$ python -c "print(1 + 60*22 + 60*60*12);"
+
+That's 1 second + 22 minutes * 60 s/min + 12 hours * 60 s/min * 60 min/h
+
+To start the video from this timestamp, run:
+$ cd /mnt/hgfs/SharedFolder
+$ vlc <video_filename.mp4> --start-time="44251"
