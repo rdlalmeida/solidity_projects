@@ -1,0 +1,341 @@
+{
+  "contractName": "Battleship",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Battleship.sol\":\"Battleship\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Battleship.sol\":{\"keccak256\":\"0xb74dcdc7c9e2ff12fef97d8e9fd225a5581d762eebe889abc04d9c10094d04d5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://56d635865314e85b4ecc4fd664724be128bd690e92938943c6c93f06c7712d9f\",\"dweb:/ipfs/QmXFHcRWDD78eMfHkbUpJKR7chp1KuhbpM3YXMjUWBvKAk\"]}},\"version\":1}",
+  "bytecode": "0x60806040526040600055348015601457600080fd5b50603f8060226000396000f3fe6080604052600080fdfea264697066735822122065fd69e8985a1439c2e958ac7a640f1e4480dff00cde491e758c6ab37d98094e64736f6c63430008130033",
+  "deployedBytecode": "0x6080604052600080fdfea264697066735822122065fd69e8985a1439c2e958ac7a640f1e4480dff00cde491e758c6ab37d98094e64736f6c63430008130033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "2628:236:0:-:0;;;2697:2;2680:19;;2652:25;;;;;;;;;;2628:236;;;;;;",
+  "deployedSourceMap": "2628:236:0:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\n/*\n\tThis is an implementation of the Battleship game using Ethereum Smart Contracts.\n\tThe idea here is to enable the Battleship game in which two players using the same contract place ships in a NxN matrix. These ships are simply the cells where the value = 1. The rest of the cells represent water and have the value = 0.\n\tFrom there, players lauch \"torpedoes\", which are equivalent to naming the coordinates of a cell and check if a ship is in it or not, thus providing a hit or miss situation.\n\tFor this to work, none of the players has access to the other's map, obviously, and they are limited to make guesses until they sunk the whole fleet, thus winning the game. In real life this is achieved by making sure your opponent cannot see your board (keep that sheet hidden) and the determination of a hit or miss is, mostly, dependent on the honest responses of each player. In reality, even if one player decides to \"lie\" by ignoring a hit from the other one, eventually his adversary is going to throw enough torpedoes into the field and realise that there's no way he has missed all ships so far. After all, ships are lines of '1's and there are a finite number of possible placements of these in any NxN matrix.\n\n\tIn this smart contract, this behavior is achieved using Merkle Trees. Instead of saving the whole board in the contract, each player submits a Merkle tree root as his board. Hit and misses are determined by submitting a certain leaf for the tree, which corresponds to commiting a cell of that matrix to a value of 1, computing the proof and determining if the proof result matches the root or not, thus proving that the actual value of a cell is actually 1, confirming an hit.\n\n\tOne of the problems here is to avoid cheating. If the root of the tree is calculated using only binary values, it is trivial for an adversary to determine the whole board, since each cell is always either 0 or 1. To prevent this, the calculation of the root requires adding \"salt\" to each cell value, which is nothing more than a random value to obfuscate the actual value. But to make this work, the value of this salt must be pre-defined, stored in the contract and unaccessible to regular players, only to the contract deployer. This means that the contract creator cannot play the game since he can access the random salt array and thus reveal the whole board of an adversary easily.\n\n\tThe random salt array must be created at deploy time (use the constructor) and kept hidden from other players (make it private).\n\n\tRicardo Lopes Almeida, Pisa, May 2023\n*/\npragma solidity >=0.4.22 <0.9.0;\n\ncontract Battleship {\n\n\tconstructor() public {\n\t}\n\n\tuint boardSize = 64;\n\n\tfunction generateSaltArray() private pure returns (bytes[64] memory) {\n\n\t}\n\n\tfunction generatePseudoRandomNumber(uint _modulus) internal returns (uint) {\n\t\t\n\t}\n}\n",
+  "sourcePath": "D:\\OtherDocuments\\Github_repos\\solidity_projects\\9_battleship\\contracts\\Battleship.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/Battleship.sol",
+    "exportedSymbols": {
+      "Battleship": [
+        25
+      ]
+    },
+    "id": 26,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "2594:32:0"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "Battleship",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 25,
+        "linearizedBaseContracts": [
+          25
+        ],
+        "name": "Battleship",
+        "nameLocation": "2637:10:0",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 4,
+              "nodeType": "Block",
+              "src": "2673:4:0",
+              "statements": []
+            },
+            "id": 5,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2663:2:0"
+            },
+            "returnParameters": {
+              "id": 3,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2673:0:0"
+            },
+            "scope": 25,
+            "src": "2652:25:0",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 8,
+            "mutability": "mutable",
+            "name": "boardSize",
+            "nameLocation": "2685:9:0",
+            "nodeType": "VariableDeclaration",
+            "scope": 25,
+            "src": "2680:19:0",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 6,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "2680:4:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": {
+              "hexValue": "3634",
+              "id": 7,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "2697:2:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_64_by_1",
+                "typeString": "int_const 64"
+              },
+              "value": "64"
+            },
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 15,
+              "nodeType": "Block",
+              "src": "2772:5:0",
+              "statements": []
+            },
+            "id": 16,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "generateSaltArray",
+            "nameLocation": "2712:17:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 9,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2729:2:0"
+            },
+            "returnParameters": {
+              "id": 14,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 13,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 16,
+                  "src": "2754:16:0",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_bytes_memory_ptr_$64_memory_ptr",
+                    "typeString": "bytes[64]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 10,
+                      "name": "bytes",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "2754:5:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes_storage_ptr",
+                        "typeString": "bytes"
+                      }
+                    },
+                    "id": 12,
+                    "length": {
+                      "hexValue": "3634",
+                      "id": 11,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "2760:2:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_64_by_1",
+                        "typeString": "int_const 64"
+                      },
+                      "value": "64"
+                    },
+                    "nodeType": "ArrayTypeName",
+                    "src": "2754:9:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_bytes_storage_$64_storage_ptr",
+                      "typeString": "bytes[64]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2753:18:0"
+            },
+            "scope": 25,
+            "src": "2703:74:0",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "private"
+          },
+          {
+            "body": {
+              "id": 23,
+              "nodeType": "Block",
+              "src": "2855:7:0",
+              "statements": []
+            },
+            "id": 24,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "generatePseudoRandomNumber",
+            "nameLocation": "2789:26:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 19,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 18,
+                  "mutability": "mutable",
+                  "name": "_modulus",
+                  "nameLocation": "2821:8:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 24,
+                  "src": "2816:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 17,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2816:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2815:15:0"
+            },
+            "returnParameters": {
+              "id": 22,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 21,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 24,
+                  "src": "2849:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 20,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2849:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2848:6:0"
+            },
+            "scope": 25,
+            "src": "2780:82:0",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 26,
+        "src": "2628:236:0",
+        "usedErrors": []
+      }
+    ],
+    "src": "2594:271:0"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.19+commit.7dd6d404.Emscripten.clang"
+  },
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x3d404C82E31dEa807C202685d53017074652941c",
+      "transactionHash": "0xb80511301823d7f2179e94fa5c39d2dfd7af1197d2907bbb364d1067da0e2652"
+    }
+  },
+  "schemaVersion": "3.4.13",
+  "updatedAt": "2023-05-15T21:52:02.000Z",
+  "networkType": "ethereum",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

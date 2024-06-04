@@ -1,13 +1,8 @@
-// var web3 = require('web3');
-
 App = {
   web3Provider: null,
   contracts: {},
 
   init: async function() {
-
-    console.log("Web3 = ", web3);
-
     // Load pets.
     $.getJSON('../pets.json', function(data) {
       var petsRow = $('#petsRow');
@@ -32,34 +27,39 @@ App = {
     // Modern dapp browsers...
     if (window.ethereum) {
       App.web3Provider = window.ethereum;
-
+      console.log("Got window.ethereum");
       try {
         // Request account access
-        await window.ethereum.enable()
-      }
-      catch (error) {
+        await window.ethereum.enable();
+      } catch (error) {
         // User denied account access...
-        console.error("User denied account access!")
+        console.error("User denied account access")
       }
     }
     // Legacy dapp browsers...
     else if (window.web3) {
       App.web3Provider = window.web3.currentProvider;
+      console.log("Got window.web3");
     }
     // If no injected web3 instance is detected, fall back to Ganache
     else {
-      App.web3Provider = new Web3.providers.HttpProvider("http://localhost:7545");
+      App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
+      console.log("Got localhost");
     }
 
-    const web3 = new Web3(App.web3Provider)
+    web3 = new Web3(App.web3Provider);
 
-    
+    const web3utils = require('web3-utils');
+    console.log(web3utils);
+
+    console.log(web3);
+    console.log(await web3.eth.getAccounts()[0]);
 
     return App.initContract();
   },
 
   initContract: function() {
-    $.getJSON("Adoption.json", function(data) {
+    $.getJSON('Adoption.json', function(data) {
       // Get the necessary contract artifact file and instantiate it with @truffle/contract
       var AdoptionArtifact = data;
       App.contracts.Adoption = TruffleContract(AdoptionArtifact);
@@ -69,7 +69,8 @@ App = {
 
       // Use our contract to retrieve and mark the adopted pets
       return App.markAdopted();
-    });
+});
+
 
     return App.bindEvents();
   },
@@ -83,9 +84,9 @@ App = {
 
     App.contracts.Adoption.deployed().then(function(instance) {
       adoptionInstance = instance;
-
+    
       return adoptionInstance.getAdopters.call();
-    }).then(function(adopters){
+    }).then(function(adopters) {
       for (i = 0; i < adopters.length; i++) {
         if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
           $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
@@ -93,7 +94,7 @@ App = {
       }
     }).catch(function(err) {
       console.log(err.message);
-    });
+    });    
   },
 
   handleAdopt: function(event) {
@@ -107,12 +108,12 @@ App = {
       if (error) {
         console.log(error);
       }
-
+    
       var account = accounts[0];
-
+    
       App.contracts.Adoption.deployed().then(function(instance) {
         adoptionInstance = instance;
-
+    
         // Execute adopt as a transaction by sending account
         return adoptionInstance.adopt(petId, {from: account});
       }).then(function(result) {
@@ -122,6 +123,7 @@ App = {
       });
     });
   }
+
 };
 
 $(function() {

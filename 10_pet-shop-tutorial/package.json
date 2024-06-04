@@ -12,10 +12,10 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "devDependencies": 
     "lite-server": "^2.3.0"
   },
   "dependencies": {
-    "web3": "^1.10.0"
+    "web3-utils": "^1.10.0"
   }
 }

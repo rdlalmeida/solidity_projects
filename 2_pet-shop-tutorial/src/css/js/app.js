@@ -1,13 +1,10 @@
-// var web3 = require('web3');
+const { x } = require('../../node_modules/async/dist/async.js');
 
 App = {
   web3Provider: null,
   contracts: {},
 
   init: async function() {
-
-    console.log("Web3 = ", web3);
-
     // Load pets.
     $.getJSON('../pets.json', function(data) {
       var petsRow = $('#petsRow');
@@ -51,9 +48,7 @@ App = {
       App.web3Provider = new Web3.providers.HttpProvider("http://localhost:7545");
     }
 
-    const web3 = new Web3(App.web3Provider)
-
-    
+    web3 = new Web3(App.web3Provider)
 
     return App.initContract();
   },
