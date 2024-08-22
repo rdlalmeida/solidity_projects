@@ -1,0 +1,7 @@
+{
+	"testNetwork": {
+		"TestContract1": "0xRandomAddress",
+		"TestContract2": "0xFakeAddress",
+		"FakeContract1": "0xDumbAddress"
+	}
+}

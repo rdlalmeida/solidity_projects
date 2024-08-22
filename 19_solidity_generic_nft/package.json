@@ -1,0 +1,23 @@
+{
+  "name": "19_solidity_generic_nft",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ricardo Almeida",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@openzeppelin/contracts": "^5.0.2",
+    "ethers": "^6.13.2",
+    "hardhat": "^2.8.3"
+  },
+  "dependencies": {
+    "@types/node": "^22.4.1",
+    "dotenv": "^16.4.5",
+    "node": "^22.6.0",
+    "prettier": "^3.3.3"
+  }
+}
