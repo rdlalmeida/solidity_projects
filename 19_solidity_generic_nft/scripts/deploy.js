@@ -1,6 +1,6 @@
 const { ethers } = require("ethers");
-const { writeFile } = require("fs/promises");
-const { writeFileSync } = require("fs");
+const { writeFile, readFile } = require("fs/promises");
+const { writeFileSync, readFileSync } = require("fs");
 
 require("dotenv").config()
 
@@ -30,14 +30,23 @@ async function main() {
     @contract_address: The address where the contract was deployed
 */
 async function saveContractAddress(network, contract_name, contract_address) {
-    let test_json = {
-        [network]: {
-            "TestContract1": "0xRandomAddress",
-            "TestContract2": "0xFakeAddress",
-            [contract_name]: contract_address
-        }
-    }
     let contractAddressFN = process.env.CONTRACT_ADDRESSES_FILENAME;
+
+    var contractAddressesJSON = JSON.parse(readFileSync(contractAddressFN));
+
+    console.log("Referencing a variable:");
+    console.log(contractAddressesJSON[network][contract_name]);
+
+    contractAddressesJSON[network][contract_name] = "ChangedThisFucker!"
+
+    console.log("New JSON:");
+    console.log(contractAddressesJSON);
+
+    // contractAddressesJSON[[network]][[contract_name]] = contract_address;
+
+    // console.log(contractAddressesJSON);
+
+    process.exit(0);
 
     try {
         writeFileSync(contractAddressFN, JSON.stringify(test_json), (error) => {
@@ -53,7 +62,7 @@ async function saveContractAddress(network, contract_name, contract_address) {
     
 }
 
-saveContractAddress("testNetwork", "FakeContract1", "0xDumbAddress");
+saveContractAddress("sepolia", "TestContract2", "0xDumbAddressX");
 
 process.exit(0);
 main()

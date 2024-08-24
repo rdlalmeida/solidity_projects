@@ -1,7 +1,12 @@
 {
-	"testNetwork": {
+	"sepolia": {
 		"TestContract1": "0xRandomAddress",
 		"TestContract2": "0xFakeAddress",
 		"FakeContract1": "0xDumbAddress"
+	},
+	"hardhat": {
+		"FakeContract2": "0x12345",
+		"TestContract3": "0xSomeAddress",
+		"FakeContract3": "0xFakeAddress"
 	}
 }
