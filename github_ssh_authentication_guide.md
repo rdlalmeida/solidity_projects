@@ -40,7 +40,10 @@ First, ensure that the SSH agent is active and turn it on if it doesn't
 
 And then add the private key to it
 
-	$ sudo ssh-add ~/.ssh/id_ed25519
+	$ ssh-add ~/.ssh/id_ed25519
+
+**NOTE:** The *eval* and *ssh-add* commands need to be **both** invoked through a normal user **or** both through the superuser (using *sudo*). Either option is OK as long as both commands are consistent in this regard.
+This is due to the fact that, calling *eval "$(ssh-agent -s)"* without **sudo**, launches the *ssh-agent* under the normal user. Therefore, the addition of the private encryption key needs to be added to that process, as such the *add* command needs to refer implicitely the same type of user. Using *sudo* before each command, sends this process to the *superuser* context instead. It all works as long as the same user is invoked in both processes.
 
 ## 4. Add the public key to your github account settings
 
