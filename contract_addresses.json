@@ -1,12 +1,18 @@
 {
 	"sepolia": {
-		"TestContract1": "0xRandomAddress",
-		"TestContract2": "0xFakeAddress",
-		"FakeContract1": "0xDumbAddress"
+		"MyNFT": {
+			"address": "0x68b6B1A670C736306E1505c55B88Cf7AfeB39b67",
+			"id": [0]
+		},
+		"RoyalPets": {
+			"address": "0xB029565B32Ebd232f87D79e89ccAFeaf15D21184",
+			"id": [1, 2, 5]
+		},
+		"RentablePets": {
+			"address": "0x3C46dD31291f730A719cC8023938F06316D76510",
+			"id": [1]
+		}
 	},
 	"hardhat": {
-		"FakeContract2": "0x12345",
-		"TestContract3": "0xSomeAddress",
-		"FakeContract3": "0xFakeAddress"
 	}
 }
