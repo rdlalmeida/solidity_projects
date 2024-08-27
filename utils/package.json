@@ -1,0 +1,12 @@
+s{
+  "name": "utils",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Ricardo Almeida",
+  "license": "MIT",
+  "devDependencies": {
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.9",
+    "node": "^22.7.0"
+  }
+}
