@@ -22,9 +22,9 @@ async function getContractAddress(network, contract_json_path) {
 
     const wallet = new ethers.Wallet(process.env.METAMASK_PRIV_KEY, provider);
 
-    
+    const contractFactory = new ethers.ContractFactory(jsonContract.abi, jsonContract.bytecode, provider)
 
-
+    let contractObj = new ethers.BaseContract()
 }
 
 /*
@@ -66,4 +66,5 @@ async function saveContractAddress(network, contract_name, contract_address) {
     
 }
 
-saveContractAddress("sepolia", "TestContract2", "0xDumbAddressX");
+// saveContractAddress("sepolia", "TestContract2", "0xDumbAddressX");
+getContractAddress('sepolia', '../19_solidity_generic_nft/artifacts/contracts/SolidityNFT.sol/SolidityNFT.json')
