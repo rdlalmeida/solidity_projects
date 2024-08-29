@@ -24,7 +24,13 @@ async function getContractAddress(network, contract_json_path) {
 
     const contractFactory = new ethers.ContractFactory(jsonContract.abi, jsonContract.bytecode, provider)
 
-    let contractObj = new ethers.BaseContract()
+    // let contractObj = new ethers.BaseContract("0xAd90b8dB3a5CF06DA49F082A1c981B88AFB93b42", jsonContract.abi)
+    let contractObj = new ethers.BaseContract("0xAd90b8dB3a5CF06DA49F082A1c981B88AFB93b43", jsonContract.abi)
+
+    contractObj.attach("0xAd90b8dB3a5CF06DA49F082A1c981B88AFB93b42")
+    
+
+    console.log(contractObj)
 }
 
 /*

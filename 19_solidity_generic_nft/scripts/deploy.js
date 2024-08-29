@@ -1,6 +1,5 @@
 const { ethers } = require("ethers");
-const { writeFile, readFile } = require("fs/promises");
-const { writeFileSync, readFileSync } = require("fs");
+
 
 require("dotenv").config()
 

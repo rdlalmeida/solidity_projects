@@ -74,8 +74,8 @@
       "artifacts": []
     },
     "/home/ricardoalmeida/github_projects/solidity_projects/19_solidity_generic_nft/contracts/SolidityNFT.sol": {
-      "lastModificationDate": 1724632638362,
-      "contentHash": "4d43d2f56840eea34692d2573612b7a0",
+      "lastModificationDate": 1724878968762,
+      "contentHash": "46a6dc4bbcf1e0d8d690b864332d6447",
       "sourceName": "contracts/SolidityNFT.sol",
       "solcConfig": {
         "version": "0.8.24",

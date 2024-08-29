@@ -9,9 +9,14 @@
   "author": "Ricardo Almeida",
   "license": "ISC",
   "devDependencies": {
+    "@nomicfoundation/hardhat-ignition-ethers": "^0.15.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomicfoundation/hardhat-ethers": "^3.0.7",
+    "@nomicfoundation/hardhat-ignition": "^0.15.5",
+    "@nomicfoundation/ignition-core": "^0.15.5",
+    "@nomicfoundation/hardhat-verify": "^2.0.1",
     "@openzeppelin/contracts": "^5.0.2",
-    "ethers": "^6.13.2",
+    "ethers": "^6.1.0",
     "hardhat": "^2.8.3"
   },
   "dependencies": {
