@@ -1,4 +1,4 @@
-const { buildModule } = require("@nomicfoundation/hardhat-ignition");
+const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
 
 module.exports = buildModule("BasicDeployments", (m) => {
 	/**
@@ -23,7 +23,7 @@ module.exports = buildModule("BasicDeployments", (m) => {
 	const holaMundo = m.contract(
 		"HelloWorld",
 		// We require the artifacts for this example
-		require("../artifacts/contracts/BasicDeployment.sol/HelloWorld.json"),
+		require("../../artifacts/contracts/01_BasicDeployment.sol/HelloWorld.json"),
 		["Hola, mundo"],
 		{ id: "HolaMundo" }
 	);

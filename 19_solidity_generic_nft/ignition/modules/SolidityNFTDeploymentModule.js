@@ -7,10 +7,11 @@ const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules")
  * Certain instructions inside the callback function return 'Future' objects, which represent the result of an execution that is waiting for the function to be available once
  * the contract is deployed or an instance of a deployed contract is recovered.
  */
-module.exports = buildModule("SolidityNFT", (module) => {
-    const solidityNFT = module.contract("SolidityNFT", []);
+module.exports = buildModule("SolidityNFTDeployment", (module) => {
+    
+    const solidityNFTContract = module.contract("SolidityNFT");
 
-    module.call(solidityNFT, "sayHello", ["Hi there!"]);
+    module.call(solidityNFTContract, "sayHello", ["Hi there!"]);
 
-    return { solidityNFT };
+    return { solidityNFTContract };
 });
