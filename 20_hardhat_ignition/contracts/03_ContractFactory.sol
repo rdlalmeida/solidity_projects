@@ -14,6 +14,10 @@ contract Factory {
 
     event Deployed(uint id, address addr);
 
+    constructor() {
+        
+    }
+
     function deploy() public {
         uint id = nextId++;
          DeployedWithFactory addr = new DeployedWithFactory(id);

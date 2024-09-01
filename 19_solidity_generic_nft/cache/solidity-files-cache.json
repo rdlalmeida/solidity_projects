@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/ricardoalmeida/github_projects/solidity_projects/19_solidity_generic_nft/contracts/SolidityNFT.sol": {
-      "lastModificationDate": 1724951953287,
-      "contentHash": "46a6dc4bbcf1e0d8d690b864332d6447",
+      "lastModificationDate": 1725068078739,
+      "contentHash": "0b4b341bed1310a0ed35efae27fd7950",
       "sourceName": "contracts/SolidityNFT.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -39,44 +39,6 @@
       ],
       "artifacts": [
         "SolidityNFT"
-      ]
-    },
-    "/home/ricardoalmeida/github_projects/solidity_projects/19_solidity_generic_nft/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
-      "lastModificationDate": 1724883339086,
-      "contentHash": "d3c790edc9ccf808a17c5a6cd13614fd",
-      "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../utils/Context.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "Ownable"
       ]
     },
     "/home/ricardoalmeida/github_projects/solidity_projects/19_solidity_generic_nft/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
@@ -121,6 +83,44 @@
       ],
       "artifacts": [
         "ERC721"
+      ]
+    },
+    "/home/ricardoalmeida/github_projects/solidity_projects/19_solidity_generic_nft/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+      "lastModificationDate": 1724883339086,
+      "contentHash": "d3c790edc9ccf808a17c5a6cd13614fd",
+      "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Ownable"
       ]
     },
     "/home/ricardoalmeida/github_projects/solidity_projects/19_solidity_generic_nft/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol": {
@@ -200,44 +200,6 @@
         "Context"
       ]
     },
-    "/home/ricardoalmeida/github_projects/solidity_projects/19_solidity_generic_nft/node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
-      "lastModificationDate": 1724883339086,
-      "contentHash": "4aefc698f77ecbace7f401257dfe182d",
-      "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "IERC1155Errors",
-        "IERC20Errors",
-        "IERC721Errors"
-      ]
-    },
     "/home/ricardoalmeida/github_projects/solidity_projects/19_solidity_generic_nft/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
       "lastModificationDate": 1724883339087,
       "contentHash": "ba57ff4ddf1d9cae9d2009792795b7f6",
@@ -275,6 +237,44 @@
       ],
       "artifacts": [
         "Strings"
+      ]
+    },
+    "/home/ricardoalmeida/github_projects/solidity_projects/19_solidity_generic_nft/node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
+      "lastModificationDate": 1724883339086,
+      "contentHash": "4aefc698f77ecbace7f401257dfe182d",
+      "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC1155Errors",
+        "IERC20Errors",
+        "IERC721Errors"
       ]
     },
     "/home/ricardoalmeida/github_projects/solidity_projects/19_solidity_generic_nft/node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
@@ -535,6 +535,42 @@
         "IERC165"
       ]
     },
+    "/home/ricardoalmeida/github_projects/solidity_projects/19_solidity_generic_nft/node_modules/@openzeppelin/contracts/interfaces/IERC165.sol": {
+      "lastModificationDate": 1724883339086,
+      "contentHash": "f808b485ee0cdc6768ee8385ae5f9a2a",
+      "sourceName": "@openzeppelin/contracts/interfaces/IERC165.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/introspection/IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": []
+    },
     "/home/ricardoalmeida/github_projects/solidity_projects/19_solidity_generic_nft/node_modules/@openzeppelin/contracts/interfaces/IERC4906.sol": {
       "lastModificationDate": 1724883339086,
       "contentHash": "7f130e0d70179d683e9b9df0dda38a51",
@@ -573,42 +609,6 @@
       "artifacts": [
         "IERC4906"
       ]
-    },
-    "/home/ricardoalmeida/github_projects/solidity_projects/19_solidity_generic_nft/node_modules/@openzeppelin/contracts/interfaces/IERC165.sol": {
-      "lastModificationDate": 1724883339086,
-      "contentHash": "f808b485ee0cdc6768ee8385ae5f9a2a",
-      "sourceName": "@openzeppelin/contracts/interfaces/IERC165.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../utils/introspection/IERC165.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": []
     },
     "/home/ricardoalmeida/github_projects/solidity_projects/19_solidity_generic_nft/node_modules/@openzeppelin/contracts/interfaces/IERC721.sol": {
       "lastModificationDate": 1724883339086,

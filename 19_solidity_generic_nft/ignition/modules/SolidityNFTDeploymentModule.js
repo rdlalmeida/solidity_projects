@@ -9,7 +9,7 @@ const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules")
  */
 module.exports = buildModule("SolidityNFTDeployment", (module) => {
     
-    const solidityNFTContract = module.contract("SolidityNFT");
+    const solidityNFTContract = module.contract("SolidityNFT", ["SolidityNFT", "SNFT"]);
 
     module.call(solidityNFTContract, "sayHello", ["Hi there!"]);
 

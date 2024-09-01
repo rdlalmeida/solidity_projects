@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 abstract contract SolidityNFT is ERC721URIStorage, Ownable {
     uint256 _tokenIds;
 
-    constructor() ERC721("SolidityNFT", "SNFT") {
+    constructor (string memory _name, string memory _symbol) ERC721(_name, _symbol) {
 
     }
 
