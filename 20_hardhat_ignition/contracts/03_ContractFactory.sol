@@ -20,8 +20,8 @@ contract Factory {
 
     function deploy() public {
         uint id = nextId++;
-         DeployedWithFactory addr = new DeployedWithFactory(id);
+        DeployedWithFactory addr = new DeployedWithFactory(id);
 
-         emit Deployed(id, address(addr));
+        emit Deployed(id, address(addr));
     }
 }
