@@ -2,7 +2,7 @@ const { contractHelpers } = require("./contractHelper.js");
 
 
 async function main() {
-    contractHelpers.saveContractAddress("hardhat", "AnotherNFT", "0x1234");
+    contractHelpers.getContractAddress("goerli", "UselessNFT");
 }
 
 
