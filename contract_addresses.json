@@ -1,0 +1,11 @@
+{
+    "local": {
+        "AnotherNFT": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+    },
+    "ganache": {
+        "AnotherNFT": "0xC6a0672C1426e30c051fAe9d92321AcaA4A79d26"
+    },
+    "sepolia": {
+        "AnotherNFT": "0xe3fec5160a5993206C094C4fb4602EF6cDeA68f9"
+    }
+}
