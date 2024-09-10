@@ -207,12 +207,37 @@ var retrieveContract = async (
 	constructor_args
 ) => {
 	let contractInstance;
-	let contractFactory;
-	try {
-		// contractInstance = await ethers.getContractAt(contract_address);
-		contractFactory = await ethers.getContractFactory(contract_name);
+	// let contractFactory;
 
-		contractInstance = await contractFactory.attach(contract_address);
+	let contractOwner;
+	let signers;
+	try {
+		contractOwner = await ethers.provider.getSigner();
+		// contractOwner = signers[0];
+		// Guess what?? Turns out that this way to get the damn contract is the best one (allows transactions, apparently!)
+		contractInstance = await ethers.getContractAt(
+			contract_name,
+			contract_address,
+			contractOwner
+		);
+
+		// contractFactory = await ethers.getContractFactory(contract_name);
+		// contractInstance = await contractFactory.attach(contract_address);
+
+		/**
+		 * So, one mystery (hopefully) solved... It turns out that when I try to fetch a non-existent contract, i.e., if I try to get a
+		 * contractInstance through the contractFactory while providing a random address that has NOTHING behind it, this shit does not complain!
+		 * Nay, it complains ONLY when you try to call a contract function! So, instead of a freakin contract instance, I have a time bomb instead! This shit
+		 * returns the bogus contract instance like it's nothing and then, waaaay further down the line, when the last thing you expect is a shitty
+		 * contract instance, you call some function and BAM, errors all over the place and NOT A SINGLE ONE!!!! points to this issue. I had to
+		 * debug this bullshit for DAYS! to find it.
+		 * That's why I'm doing this pointless call to a function that only returns a fucking simple string. I'm not even capturing it! I'm doing it
+		 * just to trigger the error before moving forward!
+		 * Probably there's some contractFactory function that does this, but I really don't want to read tons of documentation right now...
+		 * This needs to be simpler ASAP!
+		 */
+		// let msg = await contractInstance.saySomething();
+		// console.log('Message: ', msg);
 	} catch (error) {
 		/*
             In this case, there's a possibility that I'm running a local network that has been reset in the meantime. This means
@@ -220,11 +245,7 @@ var retrieveContract = async (
             No matter. I only have to do this every "session", i.e., whenever the local network gets restarted (I'm not able to
             set any kind of permanence to the hardhat network yet) and only for the local hardhat network
         */
-		if (
-			error._isHardhatError &&
-			error.name == 'HardhatError' &&
-			error.number == 700
-		) {
+		if (error.code == 'BAD_DATA' && error.value == '0x') {
 			// The error defined by the parameters above is the type of error that happens when the contract is not found
 			//(needs re-deployment)
 			try {
@@ -237,6 +258,8 @@ var retrieveContract = async (
 				let contractAddress = await contractInstance.getAddress();
 
 				saveContractAddress(contract_name, contractAddress);
+
+				return [contractInstance, 'deployed into'];
 			} catch (error) {
 				console.error(error);
 				process.exit(1);
@@ -248,7 +271,7 @@ var retrieveContract = async (
 		}
 	}
 
-	return contractInstance;
+	return [contractInstance, 'retrieved from'];
 };
 
 /**
@@ -280,13 +303,11 @@ var processContract = async (contract_name, constructor_args) => {
 		return [contractInstance, 'deployed into'];
 	} else {
 		// The contract is already deployed. Retrieve it with the address
-		contractInstance = await retrieveContract(
+		return await retrieveContract(
 			contractAddress,
 			contract_name,
 			constructor_args
 		);
-
-		return [contractInstance, 'retrieved from'];
 	}
 };
 

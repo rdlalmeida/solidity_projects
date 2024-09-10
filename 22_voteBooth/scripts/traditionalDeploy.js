@@ -63,17 +63,23 @@ async function main() {
 	 */
 	let contractName = 'AnotherNFT';
 
-	let initialOwner;
+	let initialOwner, initialOwnerAddress, newOwner, newOwnerAddress;
+	let accounts;
 
 	if (network.name == 'sepolia') {
-		initialOwner = process.env.METAMASK_SEPOLIA_ACCOUNT;
+		initialOwnerAddress = process.env.SEPOLIA_ACCOUNT01;
+		newOwnerAddress = process.env.SEPOLIA_ACCOUNT02;
 	} else {
-		let accounts = await ethers.getSigners();
+		accounts = await ethers.getSigners();
 
-		initialOwner = accounts[0].address;
+		initialOwnerAddress = accounts[0].address;
+		initialOwner = accounts[0];
+
+		newOwnerAddress = accounts[1].address;
+		newOwner = accounts[1];
 	}
 
-	let constructorArguments = [initialOwner, contractName, 'ANFT'];
+	let constructorArguments = [initialOwnerAddress, contractName, 'ANFT'];
 
 	let contractInstance;
 	try {
@@ -98,7 +104,75 @@ async function main() {
 		contractAddress
 	);
 
-	await contractHelpers.verify(contractAddress, constructorArguments);
+	// let message = await contractInstance.saySomething('Merda!');
+
+	// console.log('Something: ', message);
+
+	let tokenOwner;
+
+	let id = 0;
+
+	try {
+		tokenOwner = await contractInstance.getTokenOwner(id);
+
+		console.log('Token owner got at try #1 = ', tokenOwner);
+	} catch (error) {
+		try {
+			await contractInstance.safeMint(
+				newOwnerAddress,
+				0,
+				'My first token!',
+				{
+					from: initialOwnerAddress,
+				}
+			);
+			console.log('NFT minted!');
+
+			tokenOwner = await contractInstance.getTokenOwner(id);
+
+			console.log('Token owner got at try #2 = ', tokenOwner);
+		} catch (error) {
+			console.error(error);
+			process.exit(1);
+		}
+	}
+
+	let uri;
+
+	try {
+		uri = await contractInstance.getTokenMetadata(id);
+
+		console.log('Another NFT #0 URI: ', uri);
+	} catch (error) {
+		console.error(error);
+		process.exit(1);
+	}
+
+	try {
+		/**
+		 * VERY SUPER IMPORTANT!!!!
+		 *
+		 * Down bellow is how one fucking signs a transaction with a different signer than the original (deployer)
+		 * One would thing something like this should be simple, like providing an argument to something, or simply
+		 * provide a '{ from: <signer_address>}' like before, but NO!
+		 * Now (and who knows for how long...), a transaction that needs signing is one that changes the state of the
+		 * blockchain. I've done a few of those before, but since these always use address[0] as the default signer, and
+		 * all the stuff so far only requires the owner to sign things, I was unaware of this issue.
+		 * But to send a different signature, FIRST, the contract instance needs to be connected to another user
+		 * IMPORTANT: This new user IS NOT ITS ADDRESS, but the Signer object returned by either 'await ethers.provider.getSigner()',
+		 * which returns the currently configured signer, which is usually account[0], or we can get all the Signer objects in
+		 * the current provider, i.e., all the accounts in the network (for local networks that is. Testnets are a different animal)
+		 * with 'await ethers.getSigners()' (Notice how this one does not need the 'provider', just to keep thing simple... God dammit...)
+		 * and then select one of the elements of the array (AGAIN, the Signer object and NOT the address) and provide it as argument
+		 * for the contractInstance.connect(<NewSigner>) instruction. From that point on, every function call from that contract
+		 * instance is signed with NewSigner S
+		 */
+		await contractInstance.connect(newOwner).burn(id);
+
+		console.log('Token burned!');
+	} catch (error) {
+		console.error('Unable to burn NFT#');
+	}
 
 	console.log('Done!');
 }

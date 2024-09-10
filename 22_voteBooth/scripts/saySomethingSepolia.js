@@ -10,7 +10,7 @@ async function main() {
 		throw 'This script only runs in Sepolia!';
 	}
 
-	let initialOwner = process.env.METAMASK_SEPOLIA_ACCOUNT;
+	let initialOwner = process.env.SEPOLIA_ACCOUNT01;
 	let contractName = 'AnotherNFT';
 
 	let constructorArguments = [initialOwner, contractName, 'AFNT'];
