@@ -1,8 +1,14 @@
 require('@nomicfoundation/hardhat-toolbox');
 require('dotenv').config();
 
-const { ALCHEMY_API_ENDPOINT, SEPOLIA_ACCOUNT01_PRIV, ETHERSCAN_API_KEY } =
-	process.env;
+const {
+	ALCHEMY_API_ENDPOINT,
+	SEPOLIA_ACCOUNT01_PRIV,
+	SEPOLIA_ACCOUNT02_PRIV,
+	SEPOLIA_ACCOUNT03_PRIV,
+	SEPOLIA_ACCOUNT04_PRIV,
+	ETHERSCAN_API_KEY,
+} = process.env;
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -14,7 +20,12 @@ module.exports = {
 		},
 		sepolia: {
 			url: ALCHEMY_API_ENDPOINT,
-			accounts: [`0x${SEPOLIA_ACCOUNT01_PRIV}`],
+			accounts: [
+				`0x${SEPOLIA_ACCOUNT01_PRIV}`,
+				`0x${SEPOLIA_ACCOUNT02_PRIV}`,
+				`0x${SEPOLIA_ACCOUNT03_PRIV}`,
+				`0x${SEPOLIA_ACCOUNT04_PRIV}`,
+			],
 			chainId: 11155111,
 		},
 		ganache: {

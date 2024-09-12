@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "hardhat/console.sol";
 
 /**
  * @title VoteBooth - This contract implements the element of the solution that emulates (as much as possible) a coventional voting booth. This one has three main
@@ -40,6 +41,12 @@ contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     // and so on.
     mapping(uint256 tokenId => uint256) private _voted;
 
+    // Given that one user can only hold 0 or 1 Vote NFT at a time, I have a 1:1 relationship
+    // for this particular case. As such, it is useful to maintain an inverse mapping (address => tokenId) so
+    // that I can recover the id of the token transfered to an input address. This makes little sense with "normal" NFTs
+    // but this ones are different
+    mapping(address voteOwner => uint256) private _voteOwners;
+
     // EVENTS
 
     // Just a bunch of events to track the lifetime of a vote NFT.
@@ -63,7 +70,8 @@ contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
      * and/or assign them id numbers, if needed.
      */
     constructor(address _boothOwner, string memory _name, string memory _symbol, string memory _location, string memory _ballot) ERC721(_name, _symbol) Ownable(_boothOwner){
-        nextVoteId = 0;
+        // Set this counter to start at '1' so that I can identify a '0' in any voteId mappings as a non-existent value (not-set)
+        nextVoteId = 1;
         ballot = _ballot;
         location = _location;
     }
@@ -107,10 +115,17 @@ contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
      * mapping from the ERC721URIStorage interface, _tokenURIs, which maps an id (voteId) to a string. In this case, a mint sets that data to simply
      * "Choice?". The idea is for the voter (identified by the address '_to') to replace this text by his/her choice, the answer to 'ballot', at a later stage.
      * The id of the vote to mint is automatically calculated by incrementing the respective contract parameter.
+     * 
+     * NOTE: It's tempting to return the id of the token created as a return for this function, but... this function changes the state of the blockchain,
+     * if anything by creating a new NFT. Therefore, returning anything of a transaction like this one is super tricky (if I listen for the return value,
+     * I get a ContractTransactionResponse object instead, which tells me nothing about the execution result), so the trick is to subscribe and listen to
+     * the event instead.
      * @param _to  The address of the owner of the vote NFT.
-     * @return uint256 If successful, this function returns the vote Id of the token minted.
      */
-    function mintVoteNFT(address _to) public onlyOwner returns(uint256) {
+    function mintVoteNFT(address _to) public onlyOwner {
+        // In my specific case, I don't want one voter to accumulate vote NFTs, by obvious reasons.
+        // I'm using the balanceOf to guarantee than one address contains one and only one single Vote NFT at a point
+        require(balanceOf(_to) == 0, "User already has a Vote NFT in the account!");
 
         uint256 currentVoteId = nextVoteId++;
         // Set the ownership chain in motion
@@ -119,10 +134,11 @@ contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         // And then set the main data, which for now it's just a stand in
         _setTokenURI(currentVoteId, "Choice?");
 
+        // Set our internal vote owner mapping
+        _voteOwners[_to] = currentVoteId;
+
         // And emit the event before exiting
         emit VoteMinted(currentVoteId);
-
-        return currentVoteId;
     }
 
     /**
@@ -135,7 +151,19 @@ contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         return ownerOf(_voteId);
     }
 
-    function vote(uint256 _voteId, string memory _vote) public returns (bool) {
+    /**
+     * The normal getter for this things, but this one for the internal (owner => voteId) mapping
+     * @param owner The address of the token owner
+     * @return uint256 If the owner has a vote token in his/her account, this function returns its id.
+     */
+    function getVoteId(address owner) public view returns (uint256) {
+        return _voteOwners[owner];
+    }
+
+    function vote(uint256 _voteId, string memory _vote) public {
+
+        console.log("Vote from address ", msg.sender);
+
         // Only the owner of the vote NFT with the provided id can proceed, i.e, the transaction that invokes
         // this function needs to be digitally signed by the token owner.
         require(msg.sender == getVoteOwner(_voteId), "User not authorized to vote!");
@@ -162,9 +190,32 @@ contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
             // It's a redo
             emit VoteModified(_voteId);
         }
+    }
 
-        // Return true just to signal a successful process. Right now, there's no way for this function to return false.
-        // Later, once I have a valid format to apply, this may change.
-        return true;
+    /**
+     * An overwritten (of sorts) version of the burn function, which in our case has to take into account the management of
+     * the _voteOwners mapping. I also need this function for development purposes.
+     * @param tokenId The id of the vote to be burned. The interface requires tokenId as the name of the argument.
+     */
+    function burn(uint256 tokenId) public override(ERC721Burnable) {
+        // NOTE: I'm assuming that the msg.sender is also the current owner of the tokenId provided. This is an imposition from the
+        // super.burn function, i.e., only the token owner can burn the token, obviously. I'm using this logic to my advantage
+        require(_voteOwners[msg.sender] == tokenId, "Only the token owner can burn it!");
+
+        // Remove the internal association
+        delete _voteOwners[msg.sender];
+
+        // And then the rest of the parent function
+        super.burn(tokenId);
+    
+    }
+
+    /**
+     * This function serves solely for me to test my damn deployments! I've had nightmares trying to deploy contracts with hardhat and ethers,
+     * getting all sorts of annoying errors or, in some cases, the lack of these when needed...
+     * So much so that I need the simplest function around to be able to test the most basic of contract functionality. Ish...
+     */
+    function saySomething() public pure returns (string memory) {
+        return "VoteBooth deployment successful!";
     }
 }

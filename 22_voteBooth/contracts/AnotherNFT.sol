@@ -51,7 +51,6 @@ contract AnotherNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     }
 
     function burn(uint256 tokenId) public override(ERC721Burnable) {
-        console.log("Burn message.sender = ", msg.sender);
         super.burn(tokenId);
     }
 }

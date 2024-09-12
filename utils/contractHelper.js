@@ -40,9 +40,13 @@ var deployContract = async (contract_name, constructor_args) => {
 	}
 
 	if (network.name == 'sepolia' && process.env.ETHERSCAN_API_KEY) {
-		await contractInstance.deployTransaction.wait(process.env.WAIT_BLOCKS);
+		await contractInstance
+			.deploymentTransaction()
+			.wait(process.env.WAIT_BLOCKS);
 
-		await verify(contractInstance.address, []);
+		let contractAddress = await contractInstance.getAddress();
+
+		await verify(contractAddress, [...constructor_args]);
 	}
 
 	return contractInstance;
@@ -210,7 +214,6 @@ var retrieveContract = async (
 	// let contractFactory;
 
 	let contractOwner;
-	let signers;
 	try {
 		contractOwner = await ethers.provider.getSigner();
 		// contractOwner = signers[0];
@@ -236,39 +239,36 @@ var retrieveContract = async (
 		 * Probably there's some contractFactory function that does this, but I really don't want to read tons of documentation right now...
 		 * This needs to be simpler ASAP!
 		 */
-		// let msg = await contractInstance.saySomething();
-		// console.log('Message: ', msg);
+		await contractInstance.saySomething();
 	} catch (error) {
 		/*
             In this case, there's a possibility that I'm running a local network that has been reset in the meantime. This means
             that all contracts deployed into the local network are gone, but the record of their previous address is still around.
             No matter. I only have to do this every "session", i.e., whenever the local network gets restarted (I'm not able to
             set any kind of permanence to the hardhat network yet) and only for the local hardhat network
+            As such I need to watch out for specific snippets in the main error message that can confirm this situation to me.
         */
-		if (error.code == 'BAD_DATA' && error.value == '0x') {
-			// The error defined by the parameters above is the type of error that happens when the contract is not found
-			//(needs re-deployment)
-			try {
-				contractInstance = await deployContract(
-					contract_name,
-					constructor_args
-				);
+		try {
+			contractInstance = await deployContract(
+				contract_name,
+				constructor_args
+			);
 
-				// Update the contract address in the JSON file
-				let contractAddress = await contractInstance.getAddress();
+			// Update the contract address in the JSON file
+			let contractAddress = await contractInstance.getAddress();
 
-				saveContractAddress(contract_name, contractAddress);
+			saveContractAddress(contract_name, contractAddress);
 
-				return [contractInstance, 'deployed into'];
-			} catch (error) {
-				console.error(error);
-				process.exit(1);
-			}
-		} else {
-			// Something else has happened. Raise the error caught
+			return [contractInstance, 'deployed into'];
+		} catch (error) {
 			console.error(error);
 			process.exit(1);
 		}
+	}
+
+	// Check also if the network is Sepolia, and if it is, verify the retrieved contract as well. Somethimes this thing breaks before that step
+	if (network.name == 'sepolia') {
+		await verify(contract_address, [...constructor_args]);
 	}
 
 	return [contractInstance, 'retrieved from'];
@@ -315,6 +315,22 @@ var saySomething = async () => {
 	console.log('This is working! Good job!');
 };
 
+// Logic to capture events
+
+var saveEvents = async (tx, event_name) => {
+	let txResult = await tx.wait();
+
+	let eventArgs = null;
+
+	for (const event of txResult.logs) {
+		if (event.fragment && event.fragment.name == event_name) {
+			eventArgs = event.args;
+		}
+	}
+
+	return eventArgs;
+};
+
 const contractHelpers = {
 	deployContract,
 	getContractAddress,
@@ -323,6 +339,7 @@ const contractHelpers = {
 	processContract,
 	verify,
 	saySomething,
+	saveEvents,
 };
 
 module.exports = { contractHelpers };

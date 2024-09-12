@@ -68,7 +68,14 @@ async function main() {
 
 	if (network.name == 'sepolia') {
 		initialOwnerAddress = process.env.SEPOLIA_ACCOUNT01;
+
+		initialOwner = await ethers.provider.getSigner();
+
 		newOwnerAddress = process.env.SEPOLIA_ACCOUNT02;
+
+		accounts = await ethers.getSigners();
+
+		newOwner = accounts[1];
 	} else {
 		accounts = await ethers.getSigners();
 
@@ -121,7 +128,7 @@ async function main() {
 			await contractInstance.safeMint(
 				newOwnerAddress,
 				0,
-				'My first token!',
+				'My first Sepolia token!',
 				{
 					from: initialOwnerAddress,
 				}
@@ -171,7 +178,7 @@ async function main() {
 
 		console.log('Token burned!');
 	} catch (error) {
-		console.error('Unable to burn NFT#');
+		console.error('Unable to burn NFT#: ', error);
 	}
 
 	console.log('Done!');
