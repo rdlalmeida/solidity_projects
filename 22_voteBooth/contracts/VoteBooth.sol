@@ -53,6 +53,7 @@ contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     event VoteMinted(uint _voteId);
     event VoteSubmitted(uint256 _voteId);
     event VoteModified(uint256 _voteId);
+    event VoteBurned(uint256 _voteId);
 
 
     /**
@@ -207,6 +208,9 @@ contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
 
         // And then the rest of the parent function
         super.burn(tokenId);
+
+        // Finalize by emiting the respective event
+        emit VoteBurned(tokenId);
     
     }
 

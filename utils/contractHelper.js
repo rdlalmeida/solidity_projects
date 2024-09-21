@@ -331,6 +331,40 @@ var saveEvents = async (tx, event_name) => {
 	return eventArgs;
 };
 
+/**
+ * This one is the symmetrical equivalent of the function that adds a new address to the json cheat sheet I'm keeping. The idea is to run this one after 'yarn hardhat clean' and 'yarn hardhat compile' whenever a contract gets changed to trigger its automatic re-deployment. Without forcing the contract to be re-deployed, the changes do no get reflected in any future calls.
+ * @param {*} contract_name The name of the contract whose JSON entry is to be removed from the contract_addresses.json cheat sheets. This function removes the key-value entry for all keys == contract_name for all network entries.
+ */
+var removeContractAddress = async (contract_name) => {
+	// Start by reading the JSON file contents to a variable
+	let contractAddressesJSON;
+
+	try {
+		contractAddressesJSON = require(CONTRACT_ADDRESSES_FILENAME);
+	} catch (error) {
+		// If some error happened when retrieving the JSON file, don't worry about it. It is possible
+		// that the file does not even exist yet, so it is pointless to continue from this point
+		// onward.
+		return;
+	}
+
+	for (network_name in contractAddressesJSON) {
+		if (contractAddressesJSON[network_name].hasOwnProperty(contract_name)) {
+			delete contractAddressesJSON[network_name][contract_name];
+		}
+	}
+
+	// Write the JSON object back to the file
+	fs.writeFileSync(
+		CONTRACT_ADDRESSES_FILENAME,
+		JSON.stringify(contractAddressesJSON),
+		(error) => {
+			console.error(error);
+			process.exit(1);
+		}
+	);
+};
+
 const contractHelpers = {
 	deployContract,
 	getContractAddress,
@@ -340,6 +374,7 @@ const contractHelpers = {
 	verify,
 	saySomething,
 	saveEvents,
+	removeContractAddress,
 };
 
 module.exports = { contractHelpers };
