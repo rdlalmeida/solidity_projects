@@ -3,6 +3,7 @@ const hre = require('hardhat');
 const ethers = hre.ethers;
 
 const { contractHelpers } = require('../../utils/contractHelper.js');
+const { resetNetwork } = require('./resetNetwork.js');
 /**
  * @description This is important, nay, VITAL, to be able to deploy a fucking smart contract (it shouldn't be this hard...)
  * Hardhat ignition is out for now because it has a few bugs related to passing arguments to the contructor, so I have to do it
@@ -48,6 +49,7 @@ async function _main() {
 }
 
 async function main() {
+	resetNetwork.resetContract('AnotherNFT');
 	/**
 	 * NOTE: I need to provide an ABSOLUTE path to the contract for this shit to work!! Why? First, fucking javascript doesn't do relative paths, unlike every
 	 * other decent programming language out there. So there's that to start.

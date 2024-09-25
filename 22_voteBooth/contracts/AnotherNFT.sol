@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
+error MyCustomError(string message);
 
 /**
  * @title AnotherNFT - This is a simple, ERC721-based contract so that I could use to iron out all the deployment and contract calling issues before starting with more
@@ -32,6 +33,12 @@ contract AnotherNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     function safeMint(address to, uint256 tokenId, string memory uri) public onlyOwner {
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
+    }
+
+    function testError() public pure {
+        // all this function do is to throw a custom error
+        // revert MyCustomError(my_message);
+        revert ERC721NonexistentToken(0);
     }
 
     // Simple override of the approval functions

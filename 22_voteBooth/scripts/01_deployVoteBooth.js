@@ -43,6 +43,10 @@ async function main() {
 		"' network, in address ",
 		contractAddress
 	);
+
+	let response = await contractInstance.saySomething();
+
+	console.log('Contract response: ', response);
 }
 
 main()

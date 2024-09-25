@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import {ERC721Burnable} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
 /**
@@ -14,12 +14,7 @@ import "hardhat/console.sol";
  * 2. Mint and distribute Vote NFTs among eligible voters.
  * 3. Store returned Vote NFTs until the end of the election period.
  * @author Ricardo Almeida
- * @notice TODO:
- * 1. Implement the Vote NFT. Its metadata (tokenURI) needs to be editable by the token owner and only him/her.
- * 2. Test that the only the owner can edit the NFT metadata and also it has limited (ideally one) number of times that it can be altered.
- * 3. Implement the voter eligibility logic.
- * 4. Implement the multiple vote logic. NOTE: The Vote NFT should be able to have its metadata editable at least once, but one should be able to revoke
- * a submitted NFT and replace it for a new one.
+ * TODO: Implement the voter eligibility logic.
  */
 contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
 
@@ -54,6 +49,9 @@ contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     event VoteSubmitted(uint256 _voteId);
     event VoteModified(uint256 _voteId);
     event VoteBurned(uint256 _voteId);
+
+    // Throw this one if a user tries to access a non-existent VoteNFT
+    error NonExistentVote();
 
 
     /**
@@ -107,6 +105,9 @@ contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
      * @return string The contents of the data field, i.e., a voter's choice for the token with voteId.
      */
     function getVote(uint256 _voteId) public view returns(string memory) {
+        // Only the owner of the token can check its contents
+        require(ownerOf(_voteId) == msg.sender, "Sender is not the token owner!");
+
         return ERC721URIStorage.tokenURI(_voteId);
     }
 
@@ -126,7 +127,7 @@ contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     function mintVoteNFT(address _to) public onlyOwner {
         // In my specific case, I don't want one voter to accumulate vote NFTs, by obvious reasons.
         // I'm using the balanceOf to guarantee than one address contains one and only one single Vote NFT at a point
-        require(balanceOf(_to) == 0, "User already has a Vote NFT in the account!");
+        require(balanceOf(_to) == 0, "User already has a VoteNFT in the account!");
 
         uint256 currentVoteId = nextVoteId++;
         // Set the ownership chain in motion
@@ -158,13 +159,20 @@ contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
      * @return uint256 If the owner has a vote token in his/her account, this function returns its id.
      */
     function getVoteId(address owner) public view returns (uint256) {
-        return _voteOwners[owner];
+        uint256 id = _voteOwners[owner];
+        
+        if (id == 0) {
+            // If there is no token associated to the provided address, revert this using the proper error so that
+            // this mapping behaves just like the ones from ERC721 standard
+            revert ERC721NonexistentToken(0);
+        }
+        else {
+            // Otherwise return the id
+            return id;
+        }
     }
 
     function vote(uint256 _voteId, string memory _vote) public {
-
-        console.log("Vote from address ", msg.sender);
-
         // Only the owner of the vote NFT with the provided id can proceed, i.e, the transaction that invokes
         // this function needs to be digitally signed by the token owner.
         require(msg.sender == getVoteOwner(_voteId), "User not authorized to vote!");
@@ -220,6 +228,6 @@ contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
      * So much so that I need the simplest function around to be able to test the most basic of contract functionality. Ish...
      */
     function saySomething() public pure returns (string memory) {
-        return "VoteBooth deployment successful!";
+        return "My reset script works perfectly!!";
     }
 }

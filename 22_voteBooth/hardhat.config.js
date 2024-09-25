@@ -1,5 +1,6 @@
 require('@nomicfoundation/hardhat-toolbox');
 require('dotenv').config();
+const { resetNetwork } = require('./scripts/resetNetwork.js');
 
 const {
 	ALCHEMY_API_ENDPOINT,
@@ -9,6 +10,15 @@ const {
 	SEPOLIA_ACCOUNT04_PRIV,
 	ETHERSCAN_API_KEY,
 } = process.env;
+
+task(
+	'reset-contract',
+	"Cleans all artifacts, recompiles and re-deploys the contract identified with 'contract_name'"
+)
+	.addParam('contract', 'The name of the contract to be re-deployed')
+	.setAction(async (taskArgs) => {
+		resetNetwork.resetContract(taskArgs.contract);
+	});
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {

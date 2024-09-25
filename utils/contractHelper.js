@@ -3,6 +3,8 @@ require('dotenv').config({
 });
 // const { readFileSync, writeFileSync } = require("fs");
 const fs = require('fs');
+
+// Check if this module
 const { ethers, run, network } = require('hardhat');
 
 const CONTRACT_ADDRESSES_FILENAME = process.env.CONTRACT_ADDRESSES_FILENAME;

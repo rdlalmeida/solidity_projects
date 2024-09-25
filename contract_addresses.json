@@ -1,11 +1,12 @@
 {
     "local": {
-        "AnotherNFT": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+        "VoteBooth": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
     },
     "ganache": {
-        "AnotherNFT": "0x49091bd4E96A25aD931D97156a81134dBf4Cb3ED"
+        "VoteBooth": "0x751d292Da608e65c34066caF4F3f2cEeb1352f95"
     },
-    "sepolia": {
-        "AnotherNFT": "0x31df61C5c33ec030dcf1287247d84F9087D245c2"
+    "sepolia": {},
+    "hardhat": {
+        "AnotherNFT": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
     }
 }
