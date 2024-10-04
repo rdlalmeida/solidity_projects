@@ -87,6 +87,7 @@ contract VoteBooth is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
      * This function is quite useful for development but it may cause some problems in production... It receives a tokenId and returns the token metadata 
      * (here identified as tokenId) and returns the metadata set for the token so far. Well, if that data is always encrypted, it should not be a problem I think...
      * @param tokenId The token identification number whose metadata is to be retrieved.
+     * TODO: Shouldn't this function be private? Though the vote data is going to be encrypted at some point, nevertheless, is not a good idea to have a function such like this one this available.
      */
     function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
         return super.tokenURI(tokenId);
