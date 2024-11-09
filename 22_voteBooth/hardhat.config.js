@@ -1,5 +1,6 @@
 require('@nomicfoundation/hardhat-toolbox');
 require('dotenv').config();
+
 const { resetNetwork } = require('./scripts/resetNetwork.js');
 
 const {

@@ -14,6 +14,7 @@ require('dotenv').config();
 
 let contractInstance = null;
 let contractName = 'VoteBooth';
+let contractAddress;
 let action = null;
 let constructorArguments = null;
 let base_ballot = 'Choice?';
@@ -115,6 +116,15 @@ before('Clean the contract details for a fresh run', async () => {
 			}
 		}
 	}
+	contractAddress = await contractInstance.getAddress();
+
+	console.log(
+		contractName +
+			action +
+			network.name +
+			' with address ' +
+			contractAddress
+	);
 });
 
 describe(
@@ -364,8 +374,6 @@ describe(
 					.burn(voterAccounts[2].id)
 			).to.be.revertedWith('Only the token owner can burn it!');
 		});
-
-		let currentOwner, currentId;
 
 		it('Allows the users to burn their own VoteNFTs', async () => {
 			// Burn all the VoteNFTs to finish this test suite

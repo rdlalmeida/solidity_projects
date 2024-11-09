@@ -22,9 +22,9 @@ async function _main() {
 		let accounts = await ethers.getSigners();
 		initialOwner = accounts[0].address;
 
-		const contractFactory = await ethers.getContractFactory('AnotherNFT');
+		const contractFactory = await ethers.getContractFactory('ExampleNFT');
 
-		let constructorArgs = [initialOwner, 'AnotherNFT', 'ANFT'];
+		let constructorArgs = [initialOwner, 'ExampleNFT', 'ANFT'];
 
 		const contractInstance = await contractFactory.deploy(
 			...constructorArgs
@@ -49,21 +49,21 @@ async function _main() {
 }
 
 async function main() {
-	resetNetwork.resetContract('AnotherNFT');
+	resetNetwork.resetContract('ExampleNFT');
 	/**
 	 * NOTE: I need to provide an ABSOLUTE path to the contract for this shit to work!! Why? First, fucking javascript doesn't do relative paths, unlike every
 	 * other decent programming language out there. So there's that to start.
 	 * Second, they did a puny and pathetic attempt at solving this issue by providing the path.resolve function that was supposed to convert a relative path
-	 * (../contracts/AnotherNFT.sol) into its absolute equivalent (home/ricardoalmeida/github_projects/solidity_projects/22_AnotherNFTExample/contracts/AnotherNFT.sol).
+	 * (../contracts/ExampleNFT.sol) into its absolute equivalent (home/ricardoalmeida/github_projects/solidity_projects/22_ExampleNFTExample/contracts/ExampleNFT.sol).
 	 * But because Javascript is absolutely shit, and node.js is equally or even worse than that one, it turns out that the resolve function has a bug and by some
 	 * retarded reason, it decides to omit a folder here and there from the absolute path output! In the example used, in this case, the resolve function "forgets" the
-	 * '22_AnotherNFTExample' folder. Why? Who the fuck knows... All I know is that this is completely useless and moronic.
+	 * '22_ExampleNFTExample' folder. Why? Who the fuck knows... All I know is that this is completely useless and moronic.
 	 * So, what's the solution?
 	 * Like a caveman, I have to provide the ABSOLUTE path as initial argument or this whole shit does not work...
 	 * EDIT: Forget it... It turns out that it is the contract name that this thing is needs to work. But this rant still stands. Javascript is the worst language in the
 	 * whole freakin world!
 	 */
-	let contractName = 'AnotherNFT';
+	let contractName = 'ExampleNFT';
 
 	let initialOwner, initialOwnerAddress, newOwner, newOwnerAddress;
 	let accounts;
@@ -88,7 +88,7 @@ async function main() {
 		newOwner = accounts[1];
 	}
 
-	let constructorArguments = [initialOwnerAddress, contractName, 'ANFT'];
+	let constructorArguments = [initialOwnerAddress, contractName, 'ENFT'];
 
 	let contractInstance;
 	try {
@@ -113,9 +113,11 @@ async function main() {
 		contractAddress
 	);
 
-	// let message = await contractInstance.saySomething('Merda!');
+	let message = await contractInstance.saySomething();
 
-	// console.log('Something: ', message);
+	console.log('Ownable: ', message);
+
+	process.exit(0);
 
 	let tokenOwner;
 
@@ -161,7 +163,7 @@ async function main() {
 		/**
 		 * VERY SUPER IMPORTANT!!!!
 		 *
-		 * Down bellow is how one fucking signs a transaction with a different signer than the original (deployer)
+		 * Down bellow is how one freakin signs a transaction with a different signer than the original (deployer)
 		 * One would thing something like this should be simple, like providing an argument to something, or simply
 		 * provide a '{ from: <signer_address>}' like before, but NO!
 		 * Now (and who knows for how long...), a transaction that needs signing is one that changes the state of the
