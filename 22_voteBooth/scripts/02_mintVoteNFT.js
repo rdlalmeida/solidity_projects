@@ -1,5 +1,4 @@
 require('dotenv').config();
-const hre = require('hardhat');
 const { network } = require('hardhat');
 const { contractHelpers } = require('../../utils/contractHelper.js');
 
