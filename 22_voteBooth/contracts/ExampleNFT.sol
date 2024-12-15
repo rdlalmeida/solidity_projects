@@ -80,6 +80,18 @@ contract ExampleNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         return ownerOf(tokenId);
     }
 
+    function getAccountBalance(address acct) public view returns(uint256) {
+        return acct.balance;
+    }
+
+    function getTotalSupply() public view returns(uint256) {
+        return totalSupply;
+    }
+
+    function getNextTokenId() public view returns(uint256) {
+        return nextTokenId;
+    }
+
     function burn(uint256 tokenId) public override(ERC721Burnable) {
         super.burn(tokenId);
     }

@@ -9,5 +9,9 @@
     "ethers": "^6.13.2",
     "hardhat": "^2.22.10",
     "node": "^22.7.0"
+  },
+  "dependencies": {
+    "bignumber.js": "git+https://github.com/frozeman/bignumber.js-nolookahead.git",
+    "chalk": "^5.3.0"
   }
 }

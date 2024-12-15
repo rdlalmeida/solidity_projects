@@ -1,5 +1,6 @@
 require('dotenv').config();
-// const { network } = require('hardhat');
+require('hardhat-gas-reporter');
+const { network } = require('hardhat');
 const { contractHelpers } = require('../../utils/contractHelper.js');
 
 async function main() {

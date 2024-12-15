@@ -1,5 +1,10 @@
 require('@nomicfoundation/hardhat-toolbox');
 require('dotenv').config();
+require('hardhat-gas-reporter');
+require('solidity-coverage');
+
+// NOTE: The '@nomicfoundation/hardhat-toolbox' already provides 'hardhat-etherscan' and importing both creates all sorts of problems...
+// require('@nomiclabs/hardhat-etherscan');
 
 const { resetNetwork } = require('./scripts/resetNetwork.js');
 
@@ -10,6 +15,7 @@ const {
 	SEPOLIA_ACCOUNT02_PRIV,
 	SEPOLIA_ACCOUNT03_PRIV,
 	ETHERSCAN_API_KEY,
+	COINMARKET_API_KEY,
 } = process.env;
 
 task(
@@ -22,7 +28,7 @@ task(
 	});
 
 /** @type import('hardhat/config').HardhatUserConfig */
-module.exports = {
+config = {
 	solidity: '0.8.24',
 	networks: {
 		local: {
@@ -49,4 +55,17 @@ module.exports = {
 			sepolia: ETHERSCAN_API_KEY,
 		},
 	},
+	gasReporter: {
+		enabled: true,
+		noColors: false,
+		currency: 'EUR',
+		L1: 'polygon',
+		coinmarketcap: COINMARKET_API_KEY,
+		token: 'ETH',
+		reportFormat: 'markdown',
+		showMethodSig: true,
+		suppressTerminalOutput: true,
+	},
 };
+
+module.exports = config;
