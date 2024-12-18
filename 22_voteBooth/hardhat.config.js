@@ -2,6 +2,7 @@ require('@nomicfoundation/hardhat-toolbox');
 require('dotenv').config();
 require('hardhat-gas-reporter');
 require('solidity-coverage');
+require('hardhat-contract-sizer');
 
 // NOTE: The '@nomicfoundation/hardhat-toolbox' already provides 'hardhat-etherscan' and importing both creates all sorts of problems...
 // require('@nomiclabs/hardhat-etherscan');

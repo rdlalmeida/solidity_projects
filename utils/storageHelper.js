@@ -3,17 +3,52 @@ const { ethers } = require('hardhat');
 const leftPad = require('left-pad');
 
 const standardizeInput = (input) => {
-	leftPad(
-		ethers.hexlify(ethers.toUtf8Bytes(input.toString())).replace('0x', ''),
-		64,
-		'0'
-	);
+	let cleanInput;
+	let hexedInput;
+	if (input.slice(0, 2) == '0x') {
+		// The input is already 'hexed'
+		cleanInput = input.replace('0x', '');
+	} else {
+		hexedInput = ethers.hexlify(ethers.toUtf8Bytes(input.toString()));
+		cleanInput = hexedInput.replace('0x', '');
+	}
+
+	return leftPad(cleanInput, 32, '0');
 };
 
 const getMappingSlot = (mappingSlot, key) => {
-	const mappingSlotPadded = standardizeInput(mappingSlot);
-	const keyPadded = standardizeInput(key);
-	const slot = ethers.keccak256(keyPadded.concat(mappingSlotPadded));
+	// const mappingSlotPadded = standardizeInput(mappingSlot);
+	// const keyPadded = standardizeInput(key);
+	// const slot = ethers.keccak256(keyPadded.concat(mappingSlotPadded));
+
+	try {
+		if (mappingSlot.slice(0, 2) == '0x') {
+			mappingSlot = mappingSlot.replace('0x', '');
+		}
+	} catch (error) {
+		// Don't do anything in this case. I just want to avoid crashing this when a non string is provided. These don't need any 0x removed from them
+		console.error(
+			'Current mapping is of type ',
+			typeof mappingSlot.toString()
+		);
+	}
+
+	try {
+		if (key.slice(0, 2) == '0x') {
+			key = key.replace('0x', '');
+		}
+	} catch (error) {
+		console.error('Current key is of type ', typeof key.toString());
+	}
+
+	const paddedSlot = leftPad(mappingSlot, 64, '0');
+	const paddedAddress = leftPad(key, 64, '0');
+
+	// const concatenated = ethers.concat([paddedAddress, paddedSlot]);
+
+	const concatenated = paddedAddress.concat(paddedSlot);
+
+	const slot = ethers.keccak256(ethers.toUtf8Bytes(concatenated));
 
 	return slot;
 };
@@ -97,6 +132,69 @@ const hexToASCII = (hex) => {
 	return ascii;
 };
 
+const findMappingStorage = async (address, key, startSlot, endSlot) => {
+	const bigStart = startSlot.add ? startSlot : new BigNumber(startSlot);
+	const bigEnd = endSlot.add ? endSlot : new BigNumber(endSlot);
+
+	for (
+		let mappingSlot = bigStart;
+		mappingSlot.lt(bigEnd);
+		mappingSlot = mappingSlot.add(1)
+	) {
+		const mappingValueSlot = getMappingSlot(mappingSlot.toString(), key);
+		const mappingValueStorage = await ethers.provider.getStorage(
+			address,
+			mappingValueSlot
+		);
+
+		if (mappingValueStorage != '0x00') {
+			return {
+				mappingValueStorage,
+				mappingValueSlot,
+				mappingSlot,
+			};
+		}
+	}
+
+	return null;
+};
+
+const findNestedMappingStorage = async (
+	address,
+	key,
+	key2,
+	slotStart,
+	slotEnd
+) => {
+	const bigStart = new BigNumber(slotStart);
+	const bigEnd = new BigNumber(slotEnd);
+
+	for (
+		let mappingSlot = bigStart;
+		mappingSlot.lt(bigEnd);
+		mappingSlot = mappingSlot.add(1)
+	) {
+		const nestedMappingSlot = getMappingSlot(mappingSlot.toString(), key);
+		const nestedMappingValueSlot = getMappingSlot(nestedMappingSlot, key2);
+
+		const nestedMappingValueStorage = await ethers.provider.getStorage(
+			address,
+			nestedMappingValueSlot
+		);
+
+		if (nestedMappingValueStorage != '0x00') {
+			return {
+				nestedMappingValueStorage,
+				mappingSlot,
+				nestedMappingSlot,
+				nestedMappingValueSlot,
+			};
+		}
+	}
+
+	return null;
+};
+
 module.exports = {
 	getAllSimpleStorage,
 	getTrimmedStringFromStorage,
@@ -104,4 +202,6 @@ module.exports = {
 	getMappingSlot,
 	getMappingStorage,
 	getNestedMappingStorage,
+	findMappingStorage,
+	findNestedMappingStorage,
 };
