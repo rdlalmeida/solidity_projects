@@ -24,7 +24,7 @@ abstract contract SolidityNFT is ERC721URIStorage, Ownable {
 
     // Simple function that returns a string, just to test the deployment status of this contract
     function sayHello(string memory hello) public pure returns (string memory) {
-        string memory greet = string.concat(hello, " bitch!");
+        string memory greet = string.concat(hello, " from the SolidityNFT contract!");
 
         return greet;
     }
